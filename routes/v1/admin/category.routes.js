@@ -8,10 +8,6 @@ categoryRoute.get('/', category.getAllCategory)
 categoryRoute.post('/', category.addCategory)
 
 
-
-
-
-
 //subcategory 
 categoryRoute.get('/:categoryId/subCategory/', category.getAllSubCategory)
 categoryRoute.post('/:categoryId/subCategory', category.addSubCategory)
@@ -21,12 +17,10 @@ categoryRoute.put('/:categoryId/subCategory/:subCategoryId', category.editSubCat
 
 // input field to specific subcategory
 categoryRoute.post('/:categoryId/subCategory/:subCategoryId/inputField', category.addInputField)
+categoryRoute.delete('/:categoryId/subCategory/:subCategoryId/inputField/:inputFieldId', category.deleteInputField)
+categoryRoute.put('/:categoryId/subCategory/:subCategoryId/inputField/:inputFieldId', category.editInputField)
 
-
-
-
-
-
+// category add 
 categoryRoute.get('/:categoryId', category.getCategoryById)
 categoryRoute.put('/:categoryId', category.editCategory)
 categoryRoute.delete('/:categoryId', category.deleteCategory)

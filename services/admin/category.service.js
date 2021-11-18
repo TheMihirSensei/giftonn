@@ -175,24 +175,102 @@ class Category {
 	addInputFields = (categoryId, subCategoryId, data) => {
 		return new Promise(async (res, rej) => {
 			try {
-				console.log("input field", data)
-				console.log("CATE: ", categoryId, "  ---sub ; ", subCategoryId)
+				let exist = await categoryModel.findOne(
+					{
+						_id: categoryId,
+						'subCategory.inputFields.inputType': data.inputType,
+						'subCategory.inputFields.inputName': data.inputName
+					})
+				if (exist) {
+					rej({ status: 409, message: "this input type and input name is already exist" })
+				} else {
+					let updated = await categoryModel.updateOne(
+						{ _id: categoryId, 'subCategory._id': subCategoryId },
+						{ '$addToSet': { 'subCategory.$.inputFields': data } },
+						{ new: true }
+					)
+					if (updated.matchedCount > 0 && updated.modifiedCount > 0) {
+						res({})
+					} else if (updated.matchedCount === 0) {
+						rej({ status: 404, message: "category or subcategory id is not right" })
+					} else if (updated.modifiedCount === 0) {
+						rej({ status: 400, message: "didn't updated" })
+					}
+				}
+
+
+			} catch (err) {
+				rej({ status: 500, message: "Internal server Error", error: err })
+			}
+		})
+	}
+
+	deleteInputFields = (categoryId, subCategoryId, inputFieldId) => {
+		return new Promise(async (res, rej) => {
+			try {
+
 				let updated = await categoryModel.updateOne(
-					{ _id: categoryId, 'subCategory._id': subCategoryId },
-					{ '$addToSet': { 'subCategory.$.inputFields': data } },
+					{ _id: categoryId, 'subCategory._id': subCategoryId, 'subCategory.inputFields._id': inputFieldId },
+					{ '$pull': { 'subCategory.$.inputFields': { _id: inputFieldId } } },
 					{ new: true }
 				)
-				console.log("udpated at", updated)
+				console.log("updaed", updated)
 				if (updated.matchedCount > 0 && updated.modifiedCount > 0) {
 					res({})
 				} else if (updated.matchedCount === 0) {
-					rej({ status: 404, message: "No subCategory found for updating" })
+					rej({ status: 404, message: "No inputfield found for deleting" })
 				} else if (updated.modifiedCount === 0) {
 					rej({ status: 400, message: "didn't updated" })
 				}
 
+
+
 			} catch (err) {
 				rej({ status: 500, message: "Internal server Error", error: err })
+			}
+		})
+	}
+
+	editInputFields = (categoryId, subCategoryId, inputFieldId, data) => {
+		return new Promise(async (res, rej) => {
+			try {
+				//check if its' already exist or not 
+				let exist = await categoryModel.findOne({
+					_id: categoryId,
+					'subCategory._id': subCategoryId,
+					'subCategory.inputFields.inputName': data.inputName,
+					'subCategory.inputFields.inputType': data.inputType
+				})
+
+				if (exist) {
+					rej({ status: 409, message: "this inputName and inputType is already exist for this subcategory" })
+				} else {
+					let updated = await categoryModel.updateOne(
+						{ _id: categoryId, 'subCategory._id': subCategoryId, 'subCategory.inputFields._id': inputFieldId },
+						{
+							$set: {
+								'subCategory.$[outer].inputFields.$[inner].inputType': data.inputType,
+								'subCategory.$[outer].inputFields.$[inner].inputName': data.inputName
+							}
+						},
+						{
+							arrayFilters: [
+								{ "outer._id": subCategoryId },
+								{ "inner._id": inputFieldId }
+							]
+						},
+
+					)
+					if (updated.matchedCount > 0 && updated.modifiedCount > 0) {
+						res({})
+					} else if (updated.matchedCount === 0) {
+						rej({ status: 404, message: "No subCategory found for updating" })
+					} else if (updated.modifiedCount === 0) {
+						rej({ status: 400, message: "didn't updated" })
+					}
+				}
+			} catch (err) {
+				rej({ error: err, status: 500, message: "Internal server Error" })
 			}
 		})
 	}

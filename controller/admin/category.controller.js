@@ -1,6 +1,4 @@
 const Category = require("../../services/admin/category.service")
-
-
 const category = new Category()
 
 exports.addCategory = async (req, res, next) => {
@@ -107,7 +105,29 @@ exports.addInputField = async (req, res, next) => {
 		res.status(200).json({ message: "success" })
 
 	} catch (err) {
+		console.log("eror", err)
+		res.status(err?.status).json({ message: err?.message, error: err?.error })
+	}
+}
 
+exports.deleteInputField = async (req, res, next) => {
+	try {
+		await category.deleteInputFields(req.params.categoryId, req.params.subCategoryId, req.params.inputFieldId)
+		res.status(200).json({ message: "success" })
+
+	} catch (err) {
+		console.log("eror", err)
+		res.status(err?.status).json({ message: err?.message, error: err?.error })
+	}
+}
+
+exports.editInputField = async (req, res, next) => {
+	try {
+		await category.editInputFields(req.params.categoryId, req.params.subCategoryId, req.params.inputFieldId, req.body)
+		res.status(200).json({ message: "success" })
+
+	} catch (err) {
+		console.log("eror", err)
 		res.status(err?.status).json({ message: err?.message, error: err?.error })
 	}
 }
