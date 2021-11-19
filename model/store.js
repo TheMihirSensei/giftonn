@@ -18,9 +18,13 @@ const storeSchema = new Schema({
         type: String,
         default: 'https://www.logoarena.com/contestimages/public_new/4094/7943_1391240116_thehousestore.png'
     },
-    storeImage: {
+    storeImage: [{
         type: String,
         default: 'https://www.logoarena.com/contestimages/public_new/4094/7943_1391240116_thehousestore.png'
+    }],
+    storeCategoryId: {
+        type: Schema.Types.ObjectId,
+        ref: "categories"
     },
     storeCategory: {
         type: String,
@@ -37,16 +41,21 @@ const storeSchema = new Schema({
         type: {
             type: String,
             enum: ['Point'],
+            default: "Point",
+            index: "2dsphere",
             required: true
         },
         coordinates: {
             type: [Number],
             required: true
-        }
+        },
+        formattedAddress: String,
+
     },
     status: {
         type: String,
-        enum: ["active", "deactive"]
+        enum: ["active", "deactive"],
+        default: 'active'
     },
     address: {
         type: String,

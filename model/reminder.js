@@ -19,5 +19,4 @@ const reminderSchema = new Schema({
 
 
 
-
 module.exports = model("wishList", wishListSchema)

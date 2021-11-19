@@ -2,10 +2,11 @@ const categoryRoute = require("express").Router()
 
 //  Importing the auth controller
 const category = require("../../../controller/admin/category.controller")
+const { AddCategory, AddSubCategory, validate, editCategory } = require("../../../middleware/validation")
 
 
 categoryRoute.get('/', category.getAllCategory)
-categoryRoute.post('/', category.addCategory)
+categoryRoute.post('/', AddCategory, validate, category.addCategory)
 
 
 //subcategory 
@@ -20,9 +21,9 @@ categoryRoute.post('/:categoryId/subCategory/:subCategoryId/inputField', categor
 categoryRoute.delete('/:categoryId/subCategory/:subCategoryId/inputField/:inputFieldId', category.deleteInputField)
 categoryRoute.put('/:categoryId/subCategory/:subCategoryId/inputField/:inputFieldId', category.editInputField)
 
-// category add 
+// category  
 categoryRoute.get('/:categoryId', category.getCategoryById)
-categoryRoute.put('/:categoryId', category.editCategory)
+categoryRoute.put('/:categoryId', editCategory, validate, category.editCategory)
 categoryRoute.delete('/:categoryId', category.deleteCategory)
 
 // categoryRoute.get('/:categoryId/subCategory')
