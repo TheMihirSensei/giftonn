@@ -4,8 +4,6 @@ require("dotenv").config()
 // model
 const vendorModel = require("../../model/vendor")
 
-
-
 class Auth {
 	register = (vendor) => {
 		return new Promise(async (res, rej) => {

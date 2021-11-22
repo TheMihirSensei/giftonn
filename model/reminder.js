@@ -13,10 +13,18 @@ const reminderSchema = new Schema({
         type: String,
         enum: ["aniversary", "birthday", "diwali", "holi", "eid", "other"]
 
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    occasionDate: {
+        type: Date,
+        default: new Date()
     }
 
 }, { timestamps: true })
 
 
 
-module.exports = model("wishList", wishListSchema)
+module.exports = model("reminder", reminderSchema)

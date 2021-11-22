@@ -7,7 +7,7 @@ const { addStore, validate, editInputField, editStore } = require("../../../midd
 storeRoute.get('/', store.getStores)
 storeRoute.post("/", addStore, validate, store.addStore)
 storeRoute.get("/:storeId", store.getStoreById)
-storeRoute.put("/:storeId", editStore, store.editStore)
+storeRoute.put("/:storeId", editStore, validate, store.editStore)
 storeRoute.delete("/:storeId", store.deleteStore)
 
 

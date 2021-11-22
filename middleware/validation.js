@@ -47,13 +47,48 @@ exports.RegisterPurchaser = [
 		.isNumeric()
 		.withMessage("phone number must be Numberic"),
 
-
-
 ]
 
+exports.editPurchaserSchema = [
+	check("email")
+		.optional(true)
+		.trim()
+		.normalizeEmail()
+		.isEmail()
+		.withMessage("Invalid Email "),
 
+	check("password")
+		.trim()
+		.notEmpty()
+		.withMessage("password can't be empty")
+		.isStrongPassword({ minUppercase: 1, minLowercase: 1, minLength: 6 })
+		.withMessage("password is not strong enough protect your password by entering strong password"),
 
+	check('fullName')
+		.optional(true)
+		.trim()
+		.notEmpty()
+		.withMessage("full name can't be empty")
+		.isLength({ min: 5, max: 255 })
+		.withMessage("fullName character must be between 5 to 255"),
 
+	check("age")
+		.optional(true)
+		.isNumeric({ min: 5 })
+		.withMessage("Age can't be string and age must be greater than 5"),
+
+	check("city")
+		.optional(true)
+		.isString()
+		.notEmpty()
+		.withMessage("city can't be emtpy"),
+
+	check('phone')
+		.optional(true)
+		.isNumeric()
+		.withMessage("phone number must be Numberic"),
+
+]
 
 // category validation
 exports.AddCategory = [
@@ -182,7 +217,6 @@ exports.editInputField = [
 		.notEmpty()
 		.withMessage("subCategoryName can't be empty")
 
-
 ]
 
 
@@ -272,9 +306,11 @@ exports.editStore = [
 	check('storeName')
 		.trim()
 		.notEmpty()
-		.withMessage("storeName can't be empty"),
+		.withMessage("storeName can't be empty")
+		.optional(true),
 
 	check('storeInfo')
+		.optional(true)
 		.isString()
 		.withMessage("storeInfo must be string")
 		.trim()
@@ -282,27 +318,32 @@ exports.editStore = [
 		.withMessage("storeInfo can't be empty"),
 
 	check('storeLogo')
+		.optional(true)
 		.isString()
 		.withMessage("storeLogo must be string")
 		.isURL()
 		.withMessage("storeLogo must be image URL"),
 
 	check("storeCertificate")
+		.optional(true)
 		.isString()
 		.withMessage("storeCertificate must be string")
 		.isURL()
 		.withMessage("storeCertificate must be image URL"),
 
 	check("storeImage")
+		.optional(true)
 		.isArray()
 		.withMessage("storeImage must be array"),
 
 
 	check("storeCategoryId")
+		.optional(true)
 		.isMongoId()
 		.withMessage("storeCategoryId is not proper"),
 
 	check("location.coordinates")
+		.optional(true)
 		.custom(arr => {
 			if (arr instanceof Array && arr.length === 2) {
 				return true
@@ -311,22 +352,181 @@ exports.editStore = [
 			}
 		}),
 	check("country")
+		.optional(true)
 		.trim()
 		.notEmpty()
 		.withMessage("country can't be empty"),
 
 	check("city")
+		.optional(true)
 		.trim()
 		.notEmpty()
 		.withMessage("city can't be empty"),
 
 	check("locality")
+		.optional(true)
 		.trim()
 		.notEmpty()
 		.withMessage("locality can't be empty"),
 
 	check("address")
+		.optional(true)
 		.isLength({ min: 3 })
 		.withMessage("at least 3 character required")
 
 ]
+
+
+
+
+
+// --------------------------- Product ----------------------- //
+exports.addProductSchema = [
+	check('productTitle')
+		.exists()
+		.withMessage("productTitle Field is required")
+		.trim()
+		.notEmpty()
+		.withMessage("storeName can't be empty"),
+
+	check('productDescription')
+		.trim()
+		.notEmpty()
+		.withMessage("productDescription can't be empty"),
+
+
+	check('categoryId')
+		.trim()
+		.notEmpty()
+		.withMessage("categoryId can't be empty")
+		.isMongoId()
+		.withMessage("please enter proper categoryId"),
+
+	check('subCategoryId')
+		.trim()
+		.notEmpty()
+		.withMessage("subCategoryId can't be empty")
+		.isMongoId()
+		.withMessage("please enter proper subCategoryId"),
+
+	check('price')
+		.exists()
+		.withMessage("price is necessary")
+		.isNumeric()
+		.withMessage("price must be number"),
+
+	check('qty')
+		.exists()
+		.withMessage("qty is necessary")
+		.isInt()
+		.withMessage("qty must be integer"),
+
+	check('serviceCharge')
+		.isNumeric({ min: 0, max: 100 })
+		.withMessage("serviceCharge must be between 0 to 100"),
+
+	check('isProductLaunched')
+		.optional(true)
+		.isBoolean()
+		.withMessage("isProductLaunched must be boolean"),
+
+	check("store.*")
+		.isMongoId()
+		.withMessage("please provide proper storeId in array"),
+
+
+	check("tags.*")
+		.optional(true)
+		.isString()
+		.withMessage("please provide tags in strings"),
+
+
+	check("giftType")
+		.optional(true)
+		.trim()
+		.notEmpty()
+		.withMessage("giftType must be string")
+
+]
+
+
+exports.editProductSchema = [
+	param('productId')
+		.isMongoId()
+		.withMessage("please provide proper productId in params"),
+
+	check('productTitle')
+		.trim()
+		.notEmpty()
+		.withMessage("storeName can't be empty")
+		.optional(true),
+
+	check('productDescription')
+		.trim()
+		.notEmpty()
+		.withMessage("productDescription can't be empty")
+		.optional(true),
+
+
+	check('categoryId')
+		.trim()
+		.notEmpty()
+		.withMessage("categoryId can't be empty")
+		.isMongoId()
+		.withMessage("please enter proper categoryId")
+		.optional(true),
+
+	check('subCategoryId')
+		.trim()
+		.notEmpty()
+		.withMessage("subCategoryId can't be empty")
+		.isMongoId()
+		.withMessage("please enter proper subCategoryId")
+		.optional(true),
+
+	check('price')
+		.isNumeric()
+		.withMessage("price must be number")
+		.optional(true),
+
+	check('qty')
+		.isInt()
+		.withMessage("qty must be integer")
+		.optional(true),
+
+	check('serviceCharge')
+		.isNumeric({ min: 0, max: 100 })
+		.withMessage("serviceCharge must be between 0 to 100")
+		.optional(true),
+
+	check('isProductLaunched')
+		.isBoolean()
+		.withMessage("isProductLaunched must be boolean")
+		.optional(true),
+
+	check("store.*")
+		.isMongoId()
+		.withMessage("please provide proper storeId in array")
+		.optional(true),
+
+
+	check("tags.*")
+		.isString()
+		.withMessage("please provide tags in strings")
+		.optional(true),
+
+
+	check("giftType")
+		.trim()
+		.notEmpty()
+		.withMessage("giftType must be string")
+		.optional(true)
+]
+
+
+
+
+
+
+
+

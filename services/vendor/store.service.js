@@ -1,5 +1,6 @@
 const storeModel = require("../../model/store")
 
+
 // this includes store and product related
 class Store {
 
@@ -82,36 +83,6 @@ class Store {
 				}
 			} catch (err) {
 				rej({ status: 500, error: err, message: "Internal server Error" })
-			}
-		})
-	}
-
-	addProduct = () => {
-		return new Promise(async (req, res) => {
-			try {
-
-			} catch (err) {
-
-			}
-		})
-	}
-
-	editProduct = () => {
-		return new Promise(async (req, res) => {
-			try {
-
-			} catch (err) {
-
-			}
-		})
-	}
-
-	deleteProduct = () => {
-		return new Promise(async (req, res) => {
-			try {
-
-			} catch (err) {
-
 			}
 		})
 	}

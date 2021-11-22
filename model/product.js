@@ -5,7 +5,7 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "vendors"
     },
-    product_title: {
+    productTitle: {
         type: String,
         required: true
     },
@@ -14,18 +14,13 @@ const productSchema = new Schema({
         required: true,
         unique: true
     },
-    product_description: {
+    productDescription: {
         type: String,
-
     },
     giftType: {
         type: String,
         enum: ["birthday", "aniversary", "love", "bestFriend", "special", "bestWishes"],
         defualt: "special"
-    },
-    productType: {
-        type: String,
-        enum: ["fashion", "jewellery", "gadget", "accessories", "others"]
     },
     categoryId: {
         type: Schema.Types.ObjectId

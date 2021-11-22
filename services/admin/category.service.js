@@ -60,7 +60,26 @@ class Category {
 			}
 		})
 	}
-
+	editCategory = (categoryId, categoryName) => {
+		return new Promise(async (res, rej) => {
+			try {
+				const exist = await categoryModel.findOne({ categoryName })
+				if (exist) {
+					rej({ status: 409, message: "category is already exist" })
+				}
+				let updated = await categoryModel.updateOne({ _id: categoryId }, { $set: { categoryName } }, { new: true })
+				if (updated.matchedCount > 0 && updated.modifiedCount > 0) {
+					res({})
+				} else if (updated.matchedCount === 0) {
+					rej({ status: 404, message: "No category found" })
+				} else if (updated.modifiedCount === 0) {
+					rej({ status: 400, message: "didn't updated" })
+				}
+			} catch (err) {
+				rej({ error: err, status: 500, message: "Internal server error" })
+			}
+		})
+	}
 	//for edit the category which scenario
 	//edit category name
 	//add subcategory to particular category  || remove subcategory from category
@@ -82,26 +101,7 @@ class Category {
 		})
 	}
 
-	editCategory = (categoryId, categoryName) => {
-		return new Promise(async (res, rej) => {
-			try {
-				const exist = await categoryModel.findOne({ categoryName })
-				if (exist) {
-					rej({ status: 409, message: "category is already exist" })
-				}
-				let updated = await categoryModel.updateOne({ _id: categoryId }, { $set: { categoryName } }, { new: true })
-				if (updated.matchedCount > 0 && updated.modifiedCount > 0) {
-					res({})
-				} else if (updated.matchedCount === 0) {
-					rej({ status: 404, message: "No category found" })
-				} else if (updated.modifiedCount === 0) {
-					rej({ status: 400, message: "didn't updated" })
-				}
-			} catch (err) {
-				rej({ error: err, status: 500, message: "Internal server error" })
-			}
-		})
-	}
+
 
 	addSubCategory = (categoryId, subCategoryName) => {
 		return new Promise(async (res, rej) => {
